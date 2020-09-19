@@ -6,7 +6,7 @@ do_poke("enable", 1)
 for i = 1, 10 do
     print(i, do_peek("blink"))
     if do_peek("blink") == 1 then
-        blinks = blinks + 1
+        blinks = blinks + 2
     end
     do_step()
 end

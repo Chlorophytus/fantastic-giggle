@@ -13,7 +13,7 @@ find_package(verilator REQUIRED)
 find_package(Lua REQUIRED)
 
 # Find its configuration file for CMake
-include(/usr/local/share/verilator/verilator-config.cmake)
+include(/usr/share/verilator/verilator-config.cmake)
 
 # Make a config file.
 configure_file(config.in.txt ${PROJECT_SOURCE_DIR}/config.hpp)
@@ -25,4 +25,4 @@ add_library(${PROJECT_NAME} STATIC harness.cpp)
 verilate(${PROJECT_NAME} SOURCES dut.v)
 
 # Link to Lua 5.3
-target_link_libraries(${PROJECT_NAME} PRIVATE lua5.3)
+target_link_libraries(${PROJECT_NAME} PRIVATE lua5.4)

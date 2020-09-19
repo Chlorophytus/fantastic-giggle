@@ -3,7 +3,7 @@
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/build/include/*",
-        "/usr/local/share/verilator/include/**"
+        "/usr/share/verilator/include/**"
     ],
     "files.associations": {
         "array": "cpp",

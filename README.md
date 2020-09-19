@@ -1,2 +1,2 @@
-# verilator-template
-Verilator/C++17 Template
+# fantastic-giggle
+VGA PPU stuff
