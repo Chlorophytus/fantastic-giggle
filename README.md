@@ -1,2 +1,2 @@
 # fantastic-giggle
-VGA PPU stuff
+VGA PPU + soft SoC stuff

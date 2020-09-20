@@ -3,7 +3,7 @@
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/build/include/*",
-        "/usr/share/verilator/include/**"
+        "/usr/share/verilator/include/*"
     ],
     "files.associations": {
         "array": "cpp",
@@ -62,7 +62,12 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "hash_map": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "ranges": "cpp",
+        "stop_token": "cpp"
     },
     "Lua.diagnostics.globals": [
         "do_reset", "do_step", "do_peek", "do_poke"
