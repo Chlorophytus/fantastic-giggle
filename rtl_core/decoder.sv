@@ -6,4 +6,5 @@ module decoder
     input wire logic unsigned [7:0] rx_data,
     output logic do_rjmp,
     output logic do_cjmp);
+    
 endmodule: decoder

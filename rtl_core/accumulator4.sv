@@ -41,6 +41,10 @@ module accumulator4
             6'b101111: i_enabler_paths = 10'b0011000000;
             6'b110001: i_enabler_paths = 10'b0100000000;
             6'b110010: i_enabler_paths = 10'b1000000000;
+            6'b110100: i_enabler_paths = 10'b0000100001;
+            6'b110101: i_enabler_paths = 10'b0000010010;
+            6'b110110: i_enabler_paths = 10'b0010000100;
+            6'b110111: i_enabler_paths = 10'b0001001000;
             default:   i_enabler_paths = 10'b0000000000;
         endcase
     end: accumulator4_mux
