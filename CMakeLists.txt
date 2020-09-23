@@ -13,5 +13,6 @@ configure_file(include/config.in.txt include/config.hpp)
 # This should make it autoload the C++ root
 add_executable(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
 
-add_subdirectory(rtl_core)
-target_link_libraries(${PROJECT_NAME} rtl_core)
+add_subdirectory(rtl_program_counter)
+add_subdirectory(rtl_adder2)
+target_link_libraries(${PROJECT_NAME} rtl_program_counter rtl_adder2)
