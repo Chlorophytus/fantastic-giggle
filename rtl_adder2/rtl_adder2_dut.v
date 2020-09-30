@@ -2,8 +2,7 @@
 module adder2_dut
    (input wire aclk,
     input wire aresetn,
-    input wire enable,
-    input wire write,
+    input wire rx_enable,
     input wire rx_carryflag,
     input wire [1:0] rx_addend0,
     input wire [1:0] rx_addend1,

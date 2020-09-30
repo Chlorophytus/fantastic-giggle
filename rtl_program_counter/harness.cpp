@@ -46,7 +46,8 @@ int rtl_program_counter::do_step(lua_State *L) {
 }
 
 bool rtl_program_counter::run() {
-  std::printf("Running test %s %s\n", rtl_program_counter_NAME, rtl_program_counter_VSTRING_FULL);
+  std::printf("Running test %s %s\n", rtl_program_counter_NAME,
+              rtl_program_counter_VSTRING_FULL);
   dut = std::make_unique<Vrtl_program_counter_dut>();
 
   auto L = luaL_newstate();

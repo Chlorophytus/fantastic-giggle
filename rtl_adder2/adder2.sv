@@ -1,33 +1,26 @@
 `timescale 1ns / 1ps
+// LUTROM-based adder2 block for FPGAs
 module adder2
-   (input wire logic aresetn,
-    input wire logic aclk,
-    input wire logic enable,
-    input wire logic write,
+   (// Enable this block
+    input wire logic rx_enable,
+
+    // Carry input
     input wire logic rx_carryflag,
+
+    // Addends input
     input wire logic unsigned [1:0] rx_addend0,
     input wire logic unsigned [1:0] rx_addend1,
+
+    // Sum of addends
     output logic unsigned [1:0] tx_sum,
+
+    // Carry output
     output logic tx_carryflag,
+
+    // Zero flag output
     output logic tx_zeroflag);
-    logic unsigned [1:0] addend0;
-    logic unsigned [1:0] addend1;
-    always_ff@(posedge aclk or negedge aresetn) begin: adder2_store_addend0
-        if(~aresetn)
-            addend0 <= 2'b00;
-        else if(enable & write)
-            addend0 <= rx_addend0;
-    end: adder2_store_addend0
-
-    always_ff@(posedge aclk or negedge aresetn) begin: adder2_store_addend1
-        if(~aresetn)
-            addend1 <= 2'b00;
-        else if(enable & write)
-            addend1 <= rx_addend1;
-    end: adder2_store_addend1
-
     always_comb begin: adder2_actual_addition
-        case ({(enable & ~write), rx_carryflag, addend1, addend0}) inside
+        case ({rx_enable, rx_carryflag, rx_addend1, rx_addend0}) inside
             6'b0_?_??_??: ;
 
             6'b1_0_00_00: {tx_carryflag, tx_sum} = 3'b000;

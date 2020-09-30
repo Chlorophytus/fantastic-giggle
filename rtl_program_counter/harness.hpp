@@ -22,7 +22,8 @@ namespace rtl_program_counter {
 const char *const *get_peekables();
 const char *const *get_pokeables();
 template <typename T>
-const std::optional<T> peek(std::unique_ptr<Vrtl_program_counter_dut> &dut, const int which) {
+const std::optional<T> peek(std::unique_ptr<Vrtl_program_counter_dut> &dut,
+                            const int which) {
   static_assert(std::is_integral<T>(),
                 "Please use an integer value for peeks.");
   auto result = T{};
@@ -35,7 +36,8 @@ const std::optional<T> peek(std::unique_ptr<Vrtl_program_counter_dut> &dut, cons
   }
 }
 template <typename T>
-void poke(std::unique_ptr<Vrtl_program_counter_dut> &dut, const int which, const T val) {
+void poke(std::unique_ptr<Vrtl_program_counter_dut> &dut, const int which,
+          const T val) {
   switch (which) {
   case 0:
     dut->enable = val;
@@ -61,4 +63,4 @@ int do_poke(lua_State *);
 int do_reset(lua_State *);
 int do_step(lua_State *);
 bool run();
-} // namespace THIS_PROJECT
+} // namespace rtl_program_counter

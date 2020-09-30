@@ -15,4 +15,10 @@ add_executable(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
 
 add_subdirectory(rtl_program_counter)
 add_subdirectory(rtl_adder2)
-target_link_libraries(${PROJECT_NAME} rtl_program_counter rtl_adder2)
+add_subdirectory(rtl_carryadder8)
+target_link_libraries(
+    ${PROJECT_NAME}
+    rtl_program_counter
+    rtl_adder2
+    rtl_carryadder8
+)
