@@ -1,8 +1,6 @@
 {
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "C_Cpp.default.includePath": [
         "${workspaceFolder}/**",
-        "${workspaceFolder}/build/include/*",
         "/usr/share/verilator/include/*"
     ],
     "files.associations": {
@@ -72,5 +70,6 @@
     },
     "Lua.diagnostics.globals": [
         "do_reset", "do_step", "do_peek", "do_poke"
-    ]
+    ],
+    "cmake.configureOnOpen": false
 }

@@ -51,10 +51,10 @@ module carryadder8
     // statemachine
     logic unsigned [3:0] state;
     always_ff@(posedge aclk or negedge aresetn) begin: carryadder8_state_sequ
-        if(~aresetn)
+        if(~aresetn | state[3])
             state <= 4'b0000;
         else if(enable) begin
-            if(rx_strobe)
+            if(rx_strobe & ~write)
                 state <= 4'b0001;
             else
                 state <= state << 1;
@@ -83,43 +83,43 @@ module carryadder8
     logic unsigned [3:0] zeroflags;
     logic unsigned [7:0] sum;
     generate
-        for (genvar i = 0; i < 4; i+=1) begin
+        for (genvar i = 0; i < 4; i++) begin
             case(i)
                 0: adder2 d(
-                    .rx_enable(enable & state[i]),
+                    .rx_enable(enable & state[0] & ~write),
                     .rx_carryflag(rx_carryflag),
-                    .rx_addend0(addend0[i+:2]),
-                    .rx_addend1(addend1[i+:2]),
-                    .tx_sum(sum[i+:2]),
+                    .rx_addend0(addend0[0+:2]),
+                    .rx_addend1(addend1[0+:2]),
+                    .tx_sum(sum[0+:2]),
                     .tx_carryflag(carryflag0),
-                    .tx_zeroflag(zeroflags[i])
+                    .tx_zeroflag(zeroflags[0])
                 );
                 1: adder2 d(
-                    .rx_enable(enable & state[i]),
+                    .rx_enable(enable & state[1] & ~write),
                     .rx_carryflag(carryflag0),
-                    .rx_addend0(addend0[i+:2]),
-                    .rx_addend1(addend1[i+:2]),
-                    .tx_sum(sum[i+:2]),
+                    .rx_addend0(addend0[2+:2]),
+                    .rx_addend1(addend1[2+:2]),
+                    .tx_sum(sum[2+:2]),
                     .tx_carryflag(carryflag1),
-                    .tx_zeroflag(zeroflags[i])
+                    .tx_zeroflag(zeroflags[1])
                 );
                 2: adder2 d(
-                    .rx_enable(enable & state[i]),
+                    .rx_enable(enable & state[2] & ~write),
                     .rx_carryflag(carryflag1),
-                    .rx_addend0(addend0[i+:2]),
-                    .rx_addend1(addend1[i+:2]),
-                    .tx_sum(sum[i+:2]),
+                    .rx_addend0(addend0[4+:2]),
+                    .rx_addend1(addend1[4+:2]),
+                    .tx_sum(sum[4+:2]),
                     .tx_carryflag(carryflag2),
-                    .tx_zeroflag(zeroflags[i])
+                    .tx_zeroflag(zeroflags[2])
                 );
                 3: adder2 d(
-                    .rx_enable(enable & state[i]),
+                    .rx_enable(enable & state[3] & ~write),
                     .rx_carryflag(carryflag2),
-                    .rx_addend0(addend0[i+:2]),
-                    .rx_addend1(addend1[i+:2]),
-                    .tx_sum(sum[i+:2]),
+                    .rx_addend0(addend0[6+:2]),
+                    .rx_addend1(addend1[6+:2]),
+                    .tx_sum(sum[6+:2]),
                     .tx_carryflag(tx_carryflag),
-                    .tx_zeroflag(zeroflags[i])
+                    .tx_zeroflag(zeroflags[3])
                 );
             endcase
         end
@@ -127,7 +127,7 @@ module carryadder8
     always_ff@(posedge aclk or negedge aresetn) begin: carryadder8_sum
         if(~aresetn)
             tx_sum <= 8'b0000_0000;
-        else if(enable & ~|state)
+        else if(enable & state[3])
             tx_sum <= sum;
     end: carryadder8_sum
     assign tx_zeroflag = &zeroflags;
