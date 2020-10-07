@@ -1,15 +1,15 @@
 #include "harness.hpp"
-using namespace rtl_shift2;
-static std::unique_ptr<Vrtl_shift2_dut> dut{nullptr};
+using namespace rtl_barrelshifter16;
+static std::unique_ptr<Vrtl_barrelshifter16_dut> dut{nullptr};
 
-const char *const *rtl_shift2::get_peekables() {
-  return (const char *const[]){"tx_result", "tx_carryflag", nullptr};
+const char *const *rtl_barrelshifter16::get_peekables() {
+  return (const char *const[]){"tx_shift", nullptr};
 };
-const char *const *rtl_shift2::get_pokeables() {
-  return (const char *const[]){"rx_enable", "rx_carryflag", "rx_input",
-                               "rx_coeff", nullptr};
+const char *const *rtl_barrelshifter16::get_pokeables() {
+  return (const char *const[]){"rx_enable", "rx_write", "rx_direction",
+                               "rx_input",  "rx_coeff", nullptr};
 };
-int rtl_shift2::do_peek(lua_State *L) {
+int rtl_barrelshifter16::do_peek(lua_State *L) {
   auto option = luaL_checkoption(L, 1, nullptr, get_peekables());
   auto peeked = peek<lua_Integer>(dut, option);
   if (peeked.has_value()) {
@@ -20,14 +20,14 @@ int rtl_shift2::do_peek(lua_State *L) {
   return 1;
 }
 
-int rtl_shift2::do_poke(lua_State *L) {
+int rtl_barrelshifter16::do_poke(lua_State *L) {
   auto option = luaL_checkoption(L, 1, nullptr, get_pokeables());
   auto value = luaL_checkinteger(L, 2);
   poke<lua_Integer>(dut, option, value);
   return 0;
 }
 
-int rtl_shift2::do_reset(lua_State *L) {
+int rtl_barrelshifter16::do_reset(lua_State *L) {
   dut->aresetn = 0;
   dut->aclk = 1;
   dut->eval();
@@ -37,7 +37,7 @@ int rtl_shift2::do_reset(lua_State *L) {
   return 0;
 }
 
-int rtl_shift2::do_step(lua_State *L) {
+int rtl_barrelshifter16::do_step(lua_State *L) {
   dut->aclk = 1;
   dut->eval();
   dut->aclk = 0;
@@ -45,9 +45,10 @@ int rtl_shift2::do_step(lua_State *L) {
   return 0;
 }
 
-bool rtl_shift2::run() {
-  std::printf("Running test %s %s\n", rtl_shift2_NAME, rtl_shift2_VSTRING_FULL);
-  dut = std::make_unique<Vrtl_shift2_dut>();
+bool rtl_barrelshifter16::run() {
+  std::printf("Running test %s %s\n", rtl_barrelshifter16_NAME,
+              rtl_barrelshifter16_VSTRING_FULL);
+  dut = std::make_unique<Vrtl_barrelshifter16_dut>();
 
   auto L = luaL_newstate();
   luaL_openlibs(L);
@@ -60,7 +61,7 @@ bool rtl_shift2::run() {
   lua_pushcfunction(L, do_step);
   lua_setglobal(L, "do_step");
 
-  auto path = std::filesystem::path(rtl_shift2_SOURCE_DIR);
+  auto path = std::filesystem::path(rtl_barrelshifter16_SOURCE_DIR);
   path /= "test";
   path /= "run.lua";
   auto my_status = false;
