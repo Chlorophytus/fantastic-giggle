@@ -80,10 +80,10 @@ module barrelshifter16
         endcase
     end: barrelshifter16_onehot
     
-    always_ff@(posedge aclk or negedge aresetn) begin: barrelshifter16_shift
+    always_ff@(posedge aclk or negedge aresetn) begin: barrelshifter16_onreset
         if(~aresetn)
             tx_shift <= 16'h0000;
-    end: barrelshifter16_shift
+    end: barrelshifter16_onreset
     generate
         for (genvar i = 0; i < 8; i++) begin
             always_ff@(posedge aclk or negedge aresetn) begin: barrelshifter16_gen_shift
