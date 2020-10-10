@@ -1,17 +1,17 @@
 #include "harness.hpp"
-using namespace rtl_carryadder8;
-static std::unique_ptr<Vrtl_carryadder8_dut> dut{nullptr};
+using namespace rtl_carry4_alu2;
+static std::unique_ptr<Vrtl_carry4_alu2_dut> dut{nullptr};
 
-const char *const *rtl_carryadder8::get_peekables() {
-  return (const char *const[]){"tx_sum", "tx_carryflag", "tx_zeroflag",
-                               "tx_ready", nullptr};
+const char *const *rtl_carry4_alu2::get_peekables() {
+  return (const char *const[]){"tx_result",   "tx_carryflag", "tx_zeroflag",
+                               "tx_signflag", "tx_ready",     nullptr};
 };
-const char *const *rtl_carryadder8::get_pokeables() {
-  return (const char *const[]){"rx_enable",    "rx_write",   "rx_strobe",
-                               "rx_carryflag", "rx_addend0", "rx_addend1",
-                               nullptr};
+const char *const *rtl_carry4_alu2::get_pokeables() {
+  return (const char *const[]){"rx_enable",    "rx_write",  "rx_strobe",
+                               "rx_carryflag", "rx_opcode", "rx_operand0",
+                               "rx_operand1",  nullptr};
 };
-int rtl_carryadder8::do_peek(lua_State *L) {
+int rtl_carry4_alu2::do_peek(lua_State *L) {
   auto option = luaL_checkoption(L, 1, nullptr, get_peekables());
   auto peeked = peek<lua_Integer>(dut, option);
   if (peeked.has_value()) {
@@ -22,14 +22,14 @@ int rtl_carryadder8::do_peek(lua_State *L) {
   return 1;
 }
 
-int rtl_carryadder8::do_poke(lua_State *L) {
+int rtl_carry4_alu2::do_poke(lua_State *L) {
   auto option = luaL_checkoption(L, 1, nullptr, get_pokeables());
   auto value = luaL_checkinteger(L, 2);
   poke<lua_Integer>(dut, option, value);
   return 0;
 }
 
-int rtl_carryadder8::do_reset(lua_State *L) {
+int rtl_carry4_alu2::do_reset(lua_State *L) {
   dut->aresetn = 0;
   dut->aclk = 1;
   dut->eval();
@@ -39,7 +39,7 @@ int rtl_carryadder8::do_reset(lua_State *L) {
   return 0;
 }
 
-int rtl_carryadder8::do_step(lua_State *L) {
+int rtl_carry4_alu2::do_step(lua_State *L) {
   dut->aclk = 1;
   dut->eval();
   dut->aclk = 0;
@@ -47,10 +47,10 @@ int rtl_carryadder8::do_step(lua_State *L) {
   return 0;
 }
 
-bool rtl_carryadder8::run() {
-  std::printf("Running test %s %s\n", rtl_carryadder8_NAME,
-              rtl_carryadder8_VSTRING_FULL);
-  dut = std::make_unique<Vrtl_carryadder8_dut>();
+bool rtl_carry4_alu2::run() {
+  std::printf("Running test %s %s\n", rtl_carry4_alu2_NAME,
+              rtl_carry4_alu2_VSTRING_FULL);
+  dut = std::make_unique<Vrtl_carry4_alu2_dut>();
 
   auto L = luaL_newstate();
   luaL_openlibs(L);
@@ -63,7 +63,7 @@ bool rtl_carryadder8::run() {
   lua_pushcfunction(L, do_step);
   lua_setglobal(L, "do_step");
 
-  auto path = std::filesystem::path(rtl_carryadder8_SOURCE_DIR);
+  auto path = std::filesystem::path(rtl_carry4_alu2_SOURCE_DIR);
   path /= "test";
   path /= "run.lua";
   auto my_status = false;

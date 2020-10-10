@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 # This is an RTL dir and it'll be cmake'd. Name this whatever.
 # I recommend prefixing with "rtl..." which turns into "librtl..."
 # Also you can tweak version numbers and make more modular tweaks. Awesome.
-project(rtl_carryadder8 VERSION 0.1.0.2)
+project(rtl_alu2 VERSION 0.1.0.0)
 
 # You can change the C++ standard too
 set(CMAKE_CXX_STANDARD 17)
