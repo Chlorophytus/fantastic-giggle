@@ -73,20 +73,20 @@ module alu2
     // INSTANTIATE LUTS FOR: SUBTRACTION
     // ========================================================================
     always_comb begin: alu2_sub
-        case ({rx_what_op[1], rx_carryflag, rx_operand1, rx_operand0}) inside
+        case ({rx_what_op[1], rx_carryflag, -rx_operand1, rx_operand0}) inside
             6'b0_?_??_??: ;
 
-            6'b1_0_00_00: {tx_carryflag, tx_result} = 3'b010;
+            6'b1_0_00_00: {tx_carryflag, tx_result} = 3'b000;
 
             6'b1_1_00_00,
             6'b1_0_01_00,
-            6'b1_0_00_01: {tx_carryflag, tx_result} = 3'b011;
+            6'b1_0_00_01: {tx_carryflag, tx_result} = 3'b001;
 
             6'b1_0_01_01,
             6'b1_0_10_00,
             6'b1_0_00_10,
             6'b1_1_01_00,
-            6'b1_1_00_01: {tx_carryflag, tx_result} = 3'b000;
+            6'b1_1_00_01: {tx_carryflag, tx_result} = 3'b010;
 
             6'b1_0_01_10,
             6'b1_0_10_01,
@@ -94,7 +94,7 @@ module alu2
             6'b1_0_00_11,
             6'b1_1_00_10,
             6'b1_1_10_00,
-            6'b1_1_01_01: {tx_carryflag, tx_result} = 3'b001;
+            6'b1_1_01_01: {tx_carryflag, tx_result} = 3'b011;
 
             6'b1_0_11_01,
             6'b1_0_01_11,
@@ -102,19 +102,19 @@ module alu2
             6'b1_1_11_00,
             6'b1_1_00_11,
             6'b1_1_01_10,
-            6'b1_1_10_01: {tx_carryflag, tx_result} = 3'b110;
+            6'b1_1_10_01: {tx_carryflag, tx_result} = 3'b100;
 
             6'b1_0_11_10,
             6'b1_0_10_11,
             6'b1_1_10_10,
             6'b1_1_01_11,
-            6'b1_1_11_01: {tx_carryflag, tx_result} = 3'b111;
+            6'b1_1_11_01: {tx_carryflag, tx_result} = 3'b101;
 
             6'b1_0_11_11,
             6'b1_1_11_10,
-            6'b1_1_10_11: {tx_carryflag, tx_result} = 3'b100;
+            6'b1_1_10_11: {tx_carryflag, tx_result} = 3'b110;
 
-            6'b1_1_11_11: {tx_carryflag, tx_result} = 3'b101;
+            6'b1_1_11_11: {tx_carryflag, tx_result} = 3'b111;
         endcase
     end: alu2_sub
     // ========================================================================

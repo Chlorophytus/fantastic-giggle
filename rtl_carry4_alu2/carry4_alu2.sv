@@ -43,7 +43,7 @@ module carry4_alu2
     // ========================================================================
     logic unsigned [3:0] state;
     always_ff@(posedge aclk or negedge aresetn) begin: carryadder8_state_sequ
-        if(~aresetn | state[3])
+        if(~aresetn | (send_operand0[0] ? state[0] : state[3]))
             state <= 4'b0000;
         else if(enable) begin
             if(send_operand0[0]) begin
@@ -147,7 +147,7 @@ module carry4_alu2
     logic unsigned carryO[4];
     logic unsigned [3:0] zeroflags;
     logic unsigned [7:0] result;
-    assign tx_carryflag = carryO[3];
+    assign tx_carryflag = send_operand0[0] ? carryO[0] : carryO[3];
     generate
         for(genvar i = 0; i < 4; i++) begin: carry4_alu2_Galu2
             case(i)
@@ -202,7 +202,7 @@ module carry4_alu2
                             carryI[i] <= carryO[i - 1];
                     end: carry4_alu2_carry_forwarding
                     alu2 alu(
-                        .rx_what_op(send_op1),
+                        .rx_what_op(send_op2),
                         .rx_carryflag(carryI[i]),
                         .rx_operand0(|send_operand0 ? send_operand0 : operand0[i*2+:2]),
                         .rx_operand1(operand1[i*2+:2]),
@@ -222,7 +222,7 @@ module carry4_alu2
                             carryI[i] <= carryO[i - 1];
                     end: carry4_alu2_carry_forwarding
                     alu2 alu(
-                        .rx_what_op(send_op1),
+                        .rx_what_op(send_op3),
                         .rx_carryflag(carryI[i]),
                         .rx_operand0(|send_operand0 ? send_operand0 : operand0[i*2+:2]),
                         .rx_operand1(operand1[i*2+:2]),

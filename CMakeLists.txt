@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 # You can change the name of the project, but other things need to be changed
 # INTERNAL NOTE: Don't change rev number (fourth one) for this template, but
 # you can change it when generating from this template
-project(fantastic_giggle VERSION 0.2.0.6)
+project(fantastic_giggle VERSION 0.2.0.7)
 
 # You can change the C++ standard too
 set(CMAKE_CXX_STANDARD 17)
