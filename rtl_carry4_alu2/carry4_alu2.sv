@@ -37,26 +37,18 @@ module carry4_alu2
 
     // Ready signal
     output logic tx_ready);
-    logic unsigned [1:0] send_operand0;
     // ========================================================================
     // INSTANTIATE SYNC FOR: STATEFULNESS
     // ========================================================================
     logic unsigned [3:0] state;
     always_ff@(posedge aclk or negedge aresetn) begin: carryadder8_state_sequ
-        if(~aresetn | (send_operand0[0] ? state[0] : state[3]))
+        if(~aresetn | state[3])
             state <= 4'b0000;
         else if(enable) begin
-            if(send_operand0[0]) begin
-                if(rx_strobe & ~write)
-                    state <= 4'b1000;
-                else
-                    state <= state >> 1;
-            end else begin
-                if(rx_strobe & ~write)
-                    state <= 4'b0001;
-                else
-                    state <= state << 1;
-            end
+            if(rx_strobe & ~write)
+                state <= 4'b0001;
+            else
+                state <= state << 1;
         end
     end: carryadder8_state_sequ
     // ========================================================================
@@ -109,36 +101,36 @@ module carry4_alu2
     // ========================================================================
     // INSTANTIATE OPERATION SENDOFFS
     // ========================================================================
-    logic unsigned [5:0] send_openable;
-    logic unsigned [5:0] send_op0;
-    logic unsigned [5:0] send_op1;
-    logic unsigned [5:0] send_op2;
-    logic unsigned [5:0] send_op3;
+    logic unsigned [6:0] send_openable;
+    logic unsigned [4:0] send_op0;
+    logic unsigned [4:0] send_op1;
+    logic unsigned [4:0] send_op2;
+    logic unsigned [4:0] send_op3;
     always_comb begin: carry4_alu2_sends
         case ({enable & ~write, opcode}) inside
-            4'b0_???: {send_operand0, send_openable} = 8'b00_000000;
+            4'b0_???: send_openable = 7'b00_00000;
 
             // NOP
-            4'b1_000: {send_operand0, send_openable} = 8'b00_000000;
+            4'b1_000: send_openable = 7'b00_00000;
             // ADC
-            4'b1_001: {send_operand0, send_openable} = 8'b00_000001;
+            4'b1_001: send_openable = 7'b00_00001;
             // SUB
-            4'b1_010: {send_operand0, send_openable} = 8'b00_000010;
-            // ROL
-            4'b1_011: {send_operand0, send_openable} = 8'b10_000100;
-            // ROR
-            4'b1_100: {send_operand0, send_openable} = 8'b01_000100;
+            4'b1_010: send_openable = 7'b00_00010;
             // AND
-            4'b1_101: {send_operand0, send_openable} = 8'b00_001000;
+            4'b1_011: send_openable = 7'b00_00100;
             // ORR
-            4'b1_110: {send_operand0, send_openable} = 8'b00_010000;
+            4'b1_100: send_openable = 7'b00_01000;
             // EOR
-            4'b1_111: {send_operand0, send_openable} = 8'b00_100000;
+            4'b1_101: send_openable = 7'b00_10000;
+            // SEL
+            4'b1_110: send_openable = 7'b01_00000;
+            // SEH
+            4'b1_111: send_openable = 7'b10_00000;
         endcase
-        send_op0 = state[0] ? send_openable : 6'b000000;
-        send_op1 = state[1] ? send_openable : 6'b000000;
-        send_op2 = state[2] ? send_openable : 6'b000000;
-        send_op3 = state[3] ? send_openable : 6'b000000;
+        send_op0 = state[0] ? send_openable[4:0] : 5'b00000;
+        send_op1 = state[1] ? send_openable[4:0] : 5'b00000;
+        send_op2 = state[2] ? send_openable[4:0] : 5'b00000;
+        send_op3 = state[3] ? send_openable[4:0] : 5'b00000;
     end: carry4_alu2_sends
     // ========================================================================
     // GENERATE ALU BLOCKS
@@ -147,7 +139,7 @@ module carry4_alu2
     logic unsigned carryO[4];
     logic unsigned [3:0] zeroflags;
     logic unsigned [7:0] result;
-    assign tx_carryflag = send_operand0[0] ? carryO[0] : carryO[3];
+    assign tx_carryflag = carryO[3];
     generate
         for(genvar i = 0; i < 4; i++) begin: carry4_alu2_Galu2
             case(i)
@@ -155,8 +147,6 @@ module carry4_alu2
                     always_ff@(posedge aclk or negedge aresetn) begin: carry4_alu2_carry_forwarding
                         if(~aresetn)
                             carryI[i] <= 1'b0;
-                        else if(send_operand0[0])
-                            carryI[i] <= carryO[i + 1];
                         else
                             carryI[i] <= rx_carryflag;
                     end: carry4_alu2_carry_forwarding
@@ -164,7 +154,7 @@ module carry4_alu2
                     alu2 alu(
                         .rx_what_op(send_op0),
                         .rx_carryflag(carryI[i]),
-                        .rx_operand0(|send_operand0 ? send_operand0 : operand0[i*2+:2]),
+                        .rx_operand0(operand0[i*2+:2]),
                         .rx_operand1(operand1[i*2+:2]),
                         .tx_result(result[i*2+:2]),
                         .tx_carryflag(carryO[i]),
@@ -176,15 +166,13 @@ module carry4_alu2
                     always_ff@(posedge aclk or negedge aresetn) begin: carry4_alu2_carry_forwarding
                         if(~aresetn)
                             carryI[i] <= 1'b0;
-                        else if(send_operand0[0])
-                            carryI[i] <= carryO[i + 1];
                         else
                             carryI[i] <= carryO[i - 1];
                     end: carry4_alu2_carry_forwarding
                     alu2 alu(
                         .rx_what_op(send_op1),
                         .rx_carryflag(carryI[i]),
-                        .rx_operand0(|send_operand0 ? send_operand0 : operand0[i*2+:2]),
+                        .rx_operand0(operand0[i*2+:2]),
                         .rx_operand1(operand1[i*2+:2]),
                         .tx_result(result[i*2+:2]),
                         .tx_carryflag(carryO[i]),
@@ -196,15 +184,13 @@ module carry4_alu2
                     always_ff@(posedge aclk or negedge aresetn) begin: carry4_alu2_carry_forwarding
                         if(~aresetn)
                             carryI[i] <= 1'b0;
-                        else if(send_operand0[0])
-                            carryI[i] <= carryO[i + 1];
                         else
                             carryI[i] <= carryO[i - 1];
                     end: carry4_alu2_carry_forwarding
                     alu2 alu(
                         .rx_what_op(send_op2),
                         .rx_carryflag(carryI[i]),
-                        .rx_operand0(|send_operand0 ? send_operand0 : operand0[i*2+:2]),
+                        .rx_operand0(operand0[i*2+:2]),
                         .rx_operand1(operand1[i*2+:2]),
                         .tx_result(result[i*2+:2]),
                         .tx_carryflag(carryO[i]),
@@ -216,15 +202,13 @@ module carry4_alu2
                     always_ff@(posedge aclk or negedge aresetn) begin: carry4_alu2_carry_forwarding
                         if(~aresetn)
                             carryI[i] <= 1'b0;
-                        else if(send_operand0[0])
-                            carryI[i] <= rx_carryflag;
                         else
                             carryI[i] <= carryO[i - 1];
                     end: carry4_alu2_carry_forwarding
                     alu2 alu(
                         .rx_what_op(send_op3),
                         .rx_carryflag(carryI[i]),
-                        .rx_operand0(|send_operand0 ? send_operand0 : operand0[i*2+:2]),
+                        .rx_operand0(operand0[i*2+:2]),
                         .rx_operand1(operand1[i*2+:2]),
                         .tx_result(result[i*2+:2]),
                         .tx_carryflag(carryO[i]),
@@ -238,8 +222,15 @@ module carry4_alu2
     always_ff@(posedge aclk or negedge aresetn) begin: carryadder8_sum
         if(~aresetn)
             tx_result <= 8'b0000_0000;
-        else if(enable & (send_operand0[0] ? state[0] : state[3]))
-            tx_result <= result;
+        else if(enable & state[3]) begin
+            if(|send_openable[6:5]) begin
+                if(send_openable[6])
+                    tx_result <= operand1;
+                else if(send_openable[5])
+                    tx_result <= operand0;
+            end else
+                tx_result <= result;        
+        end
     end: carryadder8_sum
     assign tx_zeroflag = &zeroflags;
     assign tx_ready = ~|state;

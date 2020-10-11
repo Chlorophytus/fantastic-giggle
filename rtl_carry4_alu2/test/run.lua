@@ -8,11 +8,11 @@ local ops = {
     " N ",
     " + ",
     " - ",
-    " L ",
-    " R ",
     " & ",
     " | ",
     " ^ ",
+    " < ",
+    " > ",
 }
 
 local function determine_flags()

@@ -4,7 +4,6 @@ do_step()
 local ops = {
     " + ",
     " - ",
-    " R ",
     " & ",
     " | ",
     " ^ ",
@@ -33,7 +32,7 @@ local function test(opcode)
     end
 end
 
-for i = 1, 6 do
+for i = 1, 5 do
     print("Do no carry")
     do_poke("rx_carryflag", 0)
     test(i)

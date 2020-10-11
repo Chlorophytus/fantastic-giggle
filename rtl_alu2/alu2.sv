@@ -4,7 +4,7 @@ module alu2
    (// Carry input
     input wire logic rx_carryflag,
 
-    input wire logic unsigned [5:0] rx_what_op,
+    input wire logic unsigned [4:0] rx_what_op,
 
     // ALU inputs
     input wire logic unsigned [1:0] rx_operand0,
@@ -118,48 +118,10 @@ module alu2
         endcase
     end: alu2_sub
     // ========================================================================
-    // INSTANTIATE LUTS FOR: ROTATING
-    // ========================================================================
-    always_comb begin: alu2_rot
-        case ({rx_what_op[2], rx_carryflag, rx_operand1, rx_operand0}) inside
-            6'b0_?_??_??, 6'b1_?_??_11: ;
-
-            6'b1_0_00_00: {tx_carryflag, tx_result} = 3'b000;
-            6'b1_0_01_00: {tx_carryflag, tx_result} = 3'b001;
-            6'b1_0_10_00: {tx_carryflag, tx_result} = 3'b010;
-            6'b1_0_11_00: {tx_carryflag, tx_result} = 3'b011;
-
-            6'b1_0_00_01: {tx_carryflag, tx_result} = 3'b000;
-            6'b1_0_01_01: {tx_carryflag, tx_result} = 3'b100;
-            6'b1_0_10_01: {tx_carryflag, tx_result} = 3'b001;
-            6'b1_0_11_01: {tx_carryflag, tx_result} = 3'b101;
-
-            6'b1_0_00_10: {tx_carryflag, tx_result} = 3'b000;
-            6'b1_0_01_10: {tx_carryflag, tx_result} = 3'b010;
-            6'b1_0_10_10: {tx_carryflag, tx_result} = 3'b100;
-            6'b1_0_11_10: {tx_carryflag, tx_result} = 3'b110;
-
-            6'b1_1_00_00: {tx_carryflag, tx_result} = 3'b100;
-            6'b1_1_01_00: {tx_carryflag, tx_result} = 3'b101;
-            6'b1_1_10_00: {tx_carryflag, tx_result} = 3'b110;
-            6'b1_1_11_00: {tx_carryflag, tx_result} = 3'b100;
-
-            6'b1_1_00_01: {tx_carryflag, tx_result} = 3'b010;
-            6'b1_1_01_01: {tx_carryflag, tx_result} = 3'b100;
-            6'b1_1_10_01: {tx_carryflag, tx_result} = 3'b011;
-            6'b1_1_11_01: {tx_carryflag, tx_result} = 3'b111;
-
-            6'b1_1_00_10: {tx_carryflag, tx_result} = 3'b001;
-            6'b1_1_01_10: {tx_carryflag, tx_result} = 3'b011;
-            6'b1_1_10_10: {tx_carryflag, tx_result} = 3'b101;
-            6'b1_1_11_10: {tx_carryflag, tx_result} = 3'b111;
-        endcase
-    end: alu2_rot
-    // ========================================================================
     // INSTANTIATE LUTS FOR: LOGICAL AND
     // ========================================================================
     always_comb begin: alu2_and
-        case ({rx_what_op[3], rx_carryflag, rx_operand1, rx_operand0}) inside
+        case ({rx_what_op[2], rx_carryflag, rx_operand1, rx_operand0}) inside
             6'b0_?_??_??: ;
 
             6'b1_?_00_00: {tx_carryflag, tx_result} = 3'b000;
@@ -187,7 +149,7 @@ module alu2
     // INSTANTIATE LUTS FOR: LOGICAL OR
     // ========================================================================
     always_comb begin: alu2_orr
-        case ({rx_what_op[4], rx_carryflag, rx_operand1, rx_operand0}) inside
+        case ({rx_what_op[3], rx_carryflag, rx_operand1, rx_operand0}) inside
             6'b0_?_??_??: ;
 
             6'b1_?_00_00: {tx_carryflag, tx_result} = 3'b000;
@@ -215,7 +177,7 @@ module alu2
     // INSTANTIATE LUTS FOR: LOGICAL XOR
     // ========================================================================
     always_comb begin: alu2_eor
-        case ({rx_what_op[5], rx_carryflag, rx_operand1, rx_operand0}) inside
+        case ({rx_what_op[4], rx_carryflag, rx_operand1, rx_operand0}) inside
             6'b0_?_??_??: ;
 
             6'b1_?_00_00: {tx_carryflag, tx_result} = 3'b000;

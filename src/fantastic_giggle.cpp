@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
 
   // assert(rtl_barrelshifter16::run());
   // assert(rtl_alu2::run());
-  // assert(rtl_carry4_alu2::run());
+  assert(rtl_carry4_alu2::run());
   assert(rtl_lod4::run());
   // We are done
   return 0;
