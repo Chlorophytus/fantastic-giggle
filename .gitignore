@@ -104,3 +104,4 @@ _deps
 build
 config.hpp
 fantastic_giggle
+!.vscode/c_cpp_properties.json
