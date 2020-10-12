@@ -58,29 +58,6 @@ module memory16
             write <= rx_write;
     end: memory16_write_sync
     // ========================================================================
-    // INSTANTIATE SYNC FOR: JUMP
-    // ========================================================================
-    // logic jump;
-    // always_ff@(posedge aclk or negedge aresetn) begin: memory16_jump_sync
-    //     if(~aresetn)
-    //         jump <= 1'b0;
-    //     else if(enable)
-    //         jump <= rx_jump;
-    // end: memory16_jump_sync
-    // ========================================================================
-    // INSTANTIATE SYNC FOR: PROGRAM COUNTER
-    // ========================================================================
-    // always_ff@(posedge aclk or negedge aresetn) begin: memory16_program_counter
-    //     if(~aresetn)
-    //         tx_program_counter <= 16'h0000;
-    //     else if(enable & ~|state) begin
-    //         if(rx_jump)
-    //             tx_program_counter <= rx_program_counter;
-    //         else
-    //             tx_program_counter <= tx_program_counter + 16'h0001;
-    //     end
-    // end: memory16_program_counter
-    // ========================================================================
     // INSTANTIATE SYNC FOR: MEMORY
     // ========================================================================
     always_ff@(posedge aclk or negedge aresetn) begin: memory16_write
