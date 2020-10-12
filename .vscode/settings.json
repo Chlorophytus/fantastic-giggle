@@ -71,5 +71,6 @@
     "Lua.diagnostics.globals": [
         "do_reset", "do_step", "do_peek", "do_poke"
     ],
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "python.pythonPath": "/usr/bin/python3"
 }

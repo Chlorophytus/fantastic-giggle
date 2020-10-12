@@ -16,7 +16,9 @@ module registerfile16x8
     // Data in and out
     input wire logic unsigned [15:0] rx_data,
     output logic unsigned [15:0] tx_data);
-    // Good practice: capture enable/write inputs
+    // ========================================================================
+    // INSTANTIATE SYNC FOR: ENABLE
+    // ========================================================================
     logic enable;
     always_ff@(posedge aclk or negedge aresetn) begin: registerfile16x8_enable_sync
         if(~aresetn)
@@ -24,7 +26,9 @@ module registerfile16x8
         else
             enable <= rx_enable;
     end: registerfile16x8_enable_sync
-
+    // ========================================================================
+    // INSTANTIATE SYNC FOR: WRITE
+    // ========================================================================
     logic write;
     always_ff@(posedge aclk or negedge aresetn) begin: registerfile16x8_write_sync
         if(~aresetn)
@@ -32,7 +36,9 @@ module registerfile16x8
         else if(enable)
             write <= rx_write;
     end: registerfile16x8_write_sync
-
+    // ========================================================================
+    // INSTANTIATE SYNC FOR: SELECT
+    // ========================================================================
     logic unsigned [2:0] select;
     always_ff@(posedge aclk or negedge aresetn) begin: registerfile16x8_select
         if(~aresetn)
@@ -40,7 +46,9 @@ module registerfile16x8
         else if(enable)
             select <= rx_select;
     end: registerfile16x8_select
-
+    // ========================================================================
+    // INSTANTIATE LUTS FOR: SELECT
+    // ========================================================================
     logic unsigned [7:0] oh_select;
     always_comb begin: registerfile16x8_onehot
         case({enable, select}) inside
@@ -56,7 +64,9 @@ module registerfile16x8
             4'b1111: oh_select = 8'h80;
         endcase
     end: registerfile16x8_onehot
-
+    // ========================================================================
+    // GENERATE REGISTERS
+    // ========================================================================
     always_ff@(posedge aclk or negedge aresetn) begin: registerfile16x8_onreset 
         if(~aresetn | (enable & oh_select[0]))
             tx_data <= 16'h0000;
