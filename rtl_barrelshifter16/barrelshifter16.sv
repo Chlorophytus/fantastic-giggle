@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 // 16-bit barrel shifter
 module barrelshifter16
@@ -88,7 +89,7 @@ module barrelshifter16
         for (genvar i = 0; i < 8; i++) begin
             always_ff@(posedge aclk or negedge aresetn) begin: barrelshifter16_gen_shift
                 if(enable & oh_shift[i] & ~write) begin
-                    if(direction[1]) 
+                    if(directi￼on[1]) 
                         tx_shift <= (in >> (16 - i)) | (in << i);
                     else if(direction[0])
                         tx_shift <= (in << (16 - i)) | (in >> i);

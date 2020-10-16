@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 module carry4_alu2_dut
    (input wire aclk,

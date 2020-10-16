@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 // 4-bit Leading One Detector
 module lod4

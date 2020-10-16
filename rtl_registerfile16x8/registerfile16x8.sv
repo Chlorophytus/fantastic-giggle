@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 // 16-bit 8-register file
 module registerfile16x8

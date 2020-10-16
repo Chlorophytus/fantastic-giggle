@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 module registerfile16x8_dut
    (input wire aclk,

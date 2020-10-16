@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 // 8-bit ripple carry ALU based on the `alu2` block
 module carry4_alu2

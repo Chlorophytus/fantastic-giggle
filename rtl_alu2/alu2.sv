@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 // LUTROM-based 2-bit ALU slice for FPGAs
 module alu2

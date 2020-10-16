@@ -1,6 +1,6 @@
 `default_nettype none
 `timescale 1ns / 1ps
-module brancher_dut
+module root_dut
    (input wire aclk,
     input wire aresetn,
     input wire rx_enable,
@@ -13,5 +13,5 @@ module brancher_dut
     output reg [15:0] tx_program_counter,
     output reg tx_ready);
 
-    brancher d(.*); 
+    decoder d(.*); 
 endmodule

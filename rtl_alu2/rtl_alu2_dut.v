@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 module alu2_dut
    (input wire aclk,

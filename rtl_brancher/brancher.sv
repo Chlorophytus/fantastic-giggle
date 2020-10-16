@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 // 4-flag branching unit
 module brancher

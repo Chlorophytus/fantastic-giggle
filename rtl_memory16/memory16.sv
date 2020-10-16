@@ -1,3 +1,4 @@
+`default_nettype none
 `timescale 1ns / 1ps
 // 64kB 16-bit addressable memory
 module memory16
