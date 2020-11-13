@@ -76,7 +76,7 @@ module brancher
     logic unsigned [3:0] check_flags;
     always_ff@(posedge aclk or negedge aresetn) begin: brancher_chk_flags_sync
         if(~aresetn)
-            check_flags <= rx_check_flags;
+            check_flags <= 4'b0000;
         else if(enable & write_flags & ~|state)
             check_flags <= rx_check_flags;
     end: brancher_chk_flags_sync
@@ -84,7 +84,7 @@ module brancher
     logic unsigned [3:0] input_flags;
     always_ff@(posedge aclk or negedge aresetn) begin: brancher_anti_runt_flags
         if(~aresetn)
-            input_flags <= rx_input_flags;
+            input_flags <= 4'b0000;
         else if(enable)
             input_flags <= rx_input_flags;
     end: brancher_anti_runt_flags

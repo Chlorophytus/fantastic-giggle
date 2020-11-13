@@ -1,9 +1,9 @@
 #pragma once
-#include "Vrtl_memory16_dut.h"
+#include "Vrtl_memory_dut.h"
 #include "config.hpp"
 #include <cstdint>
 #include <filesystem>
-#include <lua.hpp>
+#include <lua5.3/lua.hpp>
 #include <memory>
 #include <optional>
 
@@ -18,11 +18,11 @@ using U16 = std::uint16_t;
 using U32 = std::uint32_t;
 using U64 = std::uint64_t;
 
-namespace rtl_memory16 {
+namespace rtl_memory {
 const char *const *get_peekables();
 const char *const *get_pokeables();
 template <typename T>
-const std::optional<T> peek(std::unique_ptr<Vrtl_memory16_dut> &dut,
+const std::optional<T> peek(std::unique_ptr<Vrtl_memory_dut> &dut,
                             const int which) {
   static_assert(std::is_integral<T>(),
                 "Please use an integer value for peeks.");
@@ -40,7 +40,7 @@ const std::optional<T> peek(std::unique_ptr<Vrtl_memory16_dut> &dut,
 }
 
 template <typename T>
-void poke(std::unique_ptr<Vrtl_memory16_dut> &dut, const int which, const T val) {
+void poke(std::unique_ptr<Vrtl_memory_dut> &dut, const int which, const T val) {
   switch (which) {
   case 0:
     dut->rx_enable = val;
@@ -66,4 +66,4 @@ int do_poke(lua_State *);
 int do_reset(lua_State *);
 int do_step(lua_State *);
 bool run();
-} // namespace rtl_memory16
+} // namespace rtl_memory

@@ -1,9 +1,9 @@
 #pragma once
-#include "Vrtl_brancher_dut.h"
+#include "Vrtl_alu2_dut.h"
 #include "config.hpp"
 #include <cstdint>
 #include <filesystem>
-#include <lua.hpp>
+#include <lua5.3/lua.hpp>
 #include <memory>
 #include <optional>
 
@@ -18,21 +18,27 @@ using U16 = std::uint16_t;
 using U32 = std::uint32_t;
 using U64 = std::uint64_t;
 
-namespace rtl_brancher {
+namespace rtl_alu2 {
 const char *const *get_peekables();
 const char *const *get_pokeables();
 template <typename T>
-const std::optional<T> peek(std::unique_ptr<Vrtl_brancher_dut> &dut,
+const std::optional<T> peek(std::unique_ptr<Vrtl_alu2_dut> &dut,
                             const int which) {
   static_assert(std::is_integral<T>(),
                 "Please use an integer value for peeks.");
   auto result = T{};
   switch (which) {
   case 0:
-    result = dut->tx_program_counter;
+    result = dut->tx_result;
     return result;
   case 1:
-    result = dut->tx_ready;
+    result = dut->tx_carryflag;
+    return result;
+  case 2:
+    result = dut->tx_zeroflag;
+    return result;
+  case 3:
+    result = dut->tx_signflag;
     return result;
   default:
     return {};
@@ -40,28 +46,19 @@ const std::optional<T> peek(std::unique_ptr<Vrtl_brancher_dut> &dut,
 }
 
 template <typename T>
-void poke(std::unique_ptr<Vrtl_brancher_dut> &dut, const int which, const T val) {
+void poke(std::unique_ptr<Vrtl_alu2_dut> &dut, const int which, const T val) {
   switch (which) {
   case 0:
-    dut->rx_enable = val;
+    dut->rx_carryflag = val;
     return;
   case 1:
-    dut->rx_write_branch = val;
+    dut->rx_what_op = val;
     return;
   case 2:
-    dut->rx_write_flags = val;
+    dut->rx_operand0 = val;
     return;
   case 3:
-    dut->rx_strobe = val;
-    return;
-  case 4:
-    dut->rx_input_flags = val;
-    return;
-  case 5:
-    dut->rx_check_flags = val;
-    return;
-  case 6:
-    dut->rx_branch = val;
+    dut->rx_operand1 = val;
     return;
   default:
     return;
@@ -72,4 +69,4 @@ int do_poke(lua_State *);
 int do_reset(lua_State *);
 int do_step(lua_State *);
 bool run();
-} // namespace rtl_brancher
+} // namespace rtl_alu2

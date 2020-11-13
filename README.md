@@ -1,15 +1,15 @@
 # fantastic-giggle
-VGA PPU + soft SoC stuff
+This is a design for low power draw applications.
 
 ## Boot ROM generation
 ### Generate a blank BootROM
 ```shell
-$ dd if=/dev/zero of=./rtl_memory16/bootrom.hex bs=64k count=1
+$ dd if=/dev/zero of=./rtl_memory16/bootrom.hex bs=4k count=1
 ```
 Edit this in a hex editor to get what you want. This is how we generate 64kB BootROM blanks in house.
 ### Convert the BootROM to a Verilog hex file
 ```shell
-$ python3 ./utilities/genmem.py ./rtl_memory16/bootrom.hex > ./rtl_memory16/bootrom.mem
+$ python3 ./utilities/genmem.py ./rtl_memory/bootrom.hex > ./rtl_memory/bootrom.mem
 ```
 This can be put into a Verilog Vivado project as a valid hex file for our memory's `$readmemh`. To include the notice for posterity:
 ```c
@@ -18,3 +18,10 @@ This can be put into a Verilog Vivado project as a valid hex file for our memory
 // use the `genmem.py` script with a hex file to generate hex files.
 // . . .
 ```
+## Shader ISA
+### Memory Map
+#### `000h` - Program Counter
+#### `002h` - Program Flags
+#### `002h` - Program Flags
+#### `100h` - Program Memory Begins
+#### `FFFh` - Program Memory Ends

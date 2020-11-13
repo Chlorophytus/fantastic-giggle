@@ -25,4 +25,4 @@ add_library(${PROJECT_NAME} STATIC harness.cpp)
 verilate(${PROJECT_NAME} SOURCES ${PROJECT_NAME}_dut.v)
 
 # Link to Lua 5.3
-target_link_libraries(${PROJECT_NAME} PRIVATE lua5.4)
+target_link_libraries(${PROJECT_NAME} PRIVATE lua5.3)

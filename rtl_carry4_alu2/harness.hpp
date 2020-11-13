@@ -3,7 +3,7 @@
 #include "config.hpp"
 #include <cstdint>
 #include <filesystem>
-#include <lua.hpp>
+#include <lua5.3/lua.hpp>
 #include <memory>
 #include <optional>
 
