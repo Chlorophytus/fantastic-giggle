@@ -6,7 +6,7 @@ This is a design for low power draw applications.
 ```shell
 $ dd if=/dev/zero of=./rtl_memory16/bootrom.hex bs=4k count=1
 ```
-Edit this in a hex editor to get what you want. This is how we generate 64kB BootROM blanks in house.
+Edit this in a hex editor to get what you want. This is how we generate 4kB BootROM blanks in house.
 ### Convert the BootROM to a Verilog hex file
 ```shell
 $ python3 ./utilities/genmem.py ./rtl_memory/bootrom.hex > ./rtl_memory/bootrom.mem
@@ -19,9 +19,24 @@ This can be put into a Verilog Vivado project as a valid hex file for our memory
 // . . .
 ```
 ## Shader ISA
-### Memory Map
-#### `000h` - Program Counter
-#### `002h` - Program Flags
-#### `002h` - Program Flags
-#### `100h` - Program Memory Begins
-#### `FFFh` - Program Memory Ends
+```c
+// cR - Control Prelude
+// cM - Control Multiplier
+// cO - Control Opcode
+// bD - Barrel Direction
+// bM - Barrel Magnitude
+// l3 - Enable LOD 3
+// l2 - Enable LOD 2
+// l1 - Enable LOD 1
+// l0 - Enable LOD 0
+// mm - Miscellaneous Control Word
+```
+### Forms
+#### Form 1A
+```c
+// cR cR cR cR | cR cR cR cR
+```
+### Control Prelude = `8'h00`
+Break for debugging; Form 1A.
+### Control Prelude = `8'h10` 
+Run Multiplier
