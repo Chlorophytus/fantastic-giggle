@@ -19,24 +19,27 @@ This can be put into a Verilog Vivado project as a valid hex file for our memory
 // . . .
 ```
 ## Shader ISA
-```c
-// cR - Control Prelude
-// cM - Control Multiplier
-// cO - Control Opcode
-// bD - Barrel Direction
-// bM - Barrel Magnitude
-// l3 - Enable LOD 3
-// l2 - Enable LOD 2
-// l1 - Enable LOD 1
-// l0 - Enable LOD 0
-// mm - Miscellaneous Control Word
+### Pipelining
+Each shader has 4 stages.
+### Addressing Modes
+#### Immediate
+Load two 8-bit immediate values, store into register. Due to the very nature of this shader architecture this will take two cycles.
 ```
-### Forms
-#### Form 1A
-```c
-// cR cR cR cR | cR cR cR cR
+Clk[0] => fetch/decode opcode
+Clk[1] => fetch imm[1]
+Clk[2] => fetch imm[0]
+Clk[3] => execution of sequential unit(s) BEGIN
+
+Clk[4] => STALL
+Clk[5] => STALL
+Clk[6] => execution of sequential unit(s) END
+Clk[7] => write INTO ONLY register, possibly checking flags
 ```
-### Control Prelude = `8'h00`
-Break for debugging; Form 1A.
-### Control Prelude = `8'h10` 
-Run Multiplier
+#### Indirect
+Load a 16-bit address for two 8-bit values to store into/from a register.
+```
+Clk[0] => fetch/decode opcode
+Clk[1] => fetch addr[1]
+Clk[2] => fetch addr[0]
+Clk[3] => write INTO OR FROM register, possibly checking flags
+```
