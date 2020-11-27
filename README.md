@@ -43,3 +43,8 @@ Clk[1] => fetch addr[1]
 Clk[2] => fetch addr[0]
 Clk[3] => write INTO OR FROM register, possibly checking flags
 ```
+### Brainstorming
+- ALU: No op, Add, Subtract, And, Or, Xor, Select Left, Select Right, set appropriate flags
+- LOD: Check Nybbles 0, 1, 2, 3, set appropriate flags
+- Barrel Shifter: shift left/right by a scalar
+- Register File: Probably 8 16-bit registers
