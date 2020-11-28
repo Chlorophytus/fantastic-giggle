@@ -3,6 +3,12 @@
         {
             "name": "Linux",
             "includePath": [
+                "${workspaceFolder}/rtl_alu2/**",
+                "${workspaceFolder}/rtl_barrelshifter16/**",
+                "${workspaceFolder}/rtl_brancher/**",
+                "${workspaceFolder}/rtl_carry4_alu2/**",
+                "${workspaceFolder}/rtl_lod8/**",
+                "${workspaceFolder}/rtl_memory/**",
                 "${workspaceFolder}/**",
                 "${default}"
             ],

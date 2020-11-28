@@ -46,71 +46,69 @@ Clk[3] => write INTO OR FROM register, possibly checking flags
 ### The flags
 - 0: ALU Always
 - 1: ALU Carry
-- 2: ALU Zero
-- 3: ALU Sign
-- 4: LOD0 Bit0
-- 5: LOD0 Bit1
-- 6: LOD0 Hot
-- 7: HBlank
-- 8: LOD1 Bit0
-- 9: LOD1 Bit1
-- A: LOD1 Hot
-- B: VBlank
-- C: Never 
-- D: 0
-- E: 0
-- F: 0 
+- 2: LOD Test
+- 3: LOD Hot
+- 4: Custom Interrupt
+- 5: Custom Interrupt
+- 6: Custom Interrupt
+- 7: Custom Interrupt
 ### Opcodes
-- ALU: No op, Add, Subtract, And, Or, Xor, Select Left, Select Right, set appropriate flags
-- LOD: Check Nybbles 0, 1, 2, 3, set appropriate flags
-- Barrel Shifter: shift left/right by a scalar
-- Register File: Probably 8 16-bit registers
-#### `00h` - Barrel Shift
-#### `20h` - ALU Add/Subtract
-#### `40h` - ALU And
-#### `60h` - ALU Or
-#### `80h` - ALU Xor
-#### `A0h` - ALU Select Input 0
-#### `C0h` - ALU Select Input 1
-#### `E0h` - Intercept Control Codes
-- `E0h` - JI: Store program counter into `pc` immediately
-- `E1h` - JI: Store program counter into `pc` immediately
-- `E2h` - JI: Store program counter into `pc` immediately
-- `E3h` - JI: Store program counter into `pc` immediately
-- `E4h` - JI: Store program counter into `pc` immediately
-- `E5h` - JI: Store program counter into `pc` immediately
-- `E6h` - JI: Store program counter into `pc` immediately
-- `E7h` - JI: Store program counter into `pc` immediately
-- `E8h` - JI: Store program counter into `pc` immediately
-- `E9h` - JI: Store program counter into `pc` immediately
-- `EAh` - JI: Store program counter into `pc` immediately
-- `EBh` - JI: Store program counter into `pc` immediately
-- `ECh` - NOP
-- `EDh` - Barrel Shift Direction Left
-- `EEh` - Barrel Shift Direction Right
-- `EFh` - Barrel Shift Magnitude Set
-- `F0h` - JD: Store program counter into `pc` indirectly
-- `F1h` - JD: Store program counter into `pc` indirectly
-- `F2h` - JD: Store program counter into `pc` indirectly
-- `F3h` - JD: Store program counter into `pc` indirectly
-- `F4h` - JD: Store program counter into `pc` indirectly
-- `F5h` - JD: Store program counter into `pc` indirectly
-- `F6h` - JD: Store program counter into `pc` indirectly
-- `F7h` - JD: Store program counter into `pc` indirectly
-- `F8h` - JD: Store program counter into `pc` indirectly
-- `F9h` - JD: Store program counter into `pc` indirectly
-- `FAh` - JD: Store program counter into `pc` indirectly
-- `FBh` - JD: Store program counter into `pc` indirectly
-- `FCh` - NOP
-- `FDh` - STP: Store indirectly into `port`
-- `FEh` - LDP: Load indirectly from `port`
+- 8-bit ALU: No op, Add, Subtract, And, Or, Xor, Select Left, Select Right, set appropriate flags
+- 8-bit LOD: Leading Ones Detector
+- 16-bit Rotator: shift left/right by a scalar
+#### `00h` - NOP: ALU Nop
+#### `10h` - ADD: ALU Add
+#### `20h` - SUB: ALU Subtract
+#### `30h` - AND: ALU And
+#### `40h` - ORR: ALU Or
+#### `50h` - EOR: ALU Xor
+#### `60h` - SEL: ALU Select L
+#### `70h` - SER: ALU Select R
+#### `80h` - THL: Test LOD
+Mask the LOD with the immediate or indirect value. TODO: Clarify this.
+#### `90h` - Illegal Opcode, treat as NOP
+#### `A0h` - SOH: Store rotator hi byte into memory
+#### `B0h` - SOL: Store rotator lo byte into memory
+#### `C0h` - ROT: Rotate
+#### `D0h` - RTM: Rotator Magnitude Set
+#### `E0h` - Branching
+- `E0h` - BRI: Branch Immediate
+- `E1h` - BRI: Branch Immediate
+- `E2h` - BRI: Branch Immediate
+- `E3h` - BRI: Branch Immediate
+- `E4h` - BRI: Branch Immediate
+- `E5h` - BRI: Branch Immediate
+- `E6h` - BRI: Branch Immediate
+- `E7h` - BRI: Branch Immediate
+- `E8h` - BRD: Branch Indirect
+- `E9h` - BRD: Branch Indirect
+- `EAh` - BRD: Branch Indirect
+- `EBh` - BRD: Branch Indirect
+- `ECh` - BRD: Branch Indirect
+- `EDh` - BRD: Branch Indirect
+- `EEh` - BRD: Branch Indirect
+- `EFh` - BRD: Branch Indirect
+#### `F0h` - Control
+- `F0h` - Illegal Opcode, treat as NOP
+- `F1h` - Illegal Opcode, treat as NOP
+- `F2h` - Illegal Opcode, treat as NOP
+- `F3h` - Illegal Opcode, treat as NOP
+- `F4h` - Illegal Opcode, treat as NOP
+- `F5h` -
+- `F6h` - 
+- `F7h` - CLO: Zero out rotator bytes
+- `F8h` - BRK: Breakpoint
+- `F9h` - BRK: Breakpoint
+- `FAh` - BRK: Breakpoint
+- `FBh` - BRK: Breakpoint
+- `FCh` - BRK: Breakpoint
+- `FDh` - BRK: Breakpoint
+- `FEh` - BRK: Breakpoint
 - `FFh` - BRK: Breakpoint
 #### Suffixes (add these to a non-control code to manipulate the operation)
-- `10h`: indirect (can be added to some control opcodes)
-
+- `08h`: indirect
 If checking the flags then you will skip operations if the criteria aren't
 satisfied.
-- `08h`: check flag register bit 3 before execution
 - `04h`: check flag register bit 2 before execution
 - `02h`: check flag register bit 1 before execution
 - `01h`: check flag register bit 0 before execution
